@@ -1,4 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
+import { LibService } from './lib.service';
 
-@Module({})
+@Global()
+@Module({
+  providers: [LibService]
+})
 export class LibModule {}

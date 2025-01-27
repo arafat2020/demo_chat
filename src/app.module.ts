@@ -1,21 +1,33 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { LibModule } from './lib/lib.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserModule } from './user/user.module';
+import { LibModule } from './lib/lib.module';
+import { MongooseModule } from '@nestjs/mongoose';
+
 
 @Module({
-  imports: [UserModule, LibModule, ServeStaticModule.forRoot({
-    rootPath: join(__dirname, '..', 'client', 'dist'), // Adjust if needed
-  }),
+  imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Makes ConfigService available globally
+      isGlobal: true, 
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client', 'dist'),
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URL'),
+      }),
+      inject: [ConfigService],
+    }),
+    UserModule,
+    LibModule,
   ],
-  exports: [UserModule, LibModule],
+  exports: [],
   controllers: [AppController],
   providers: [AppService],
 })
