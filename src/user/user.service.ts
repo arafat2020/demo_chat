@@ -5,12 +5,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserFormHeaderSchema, UserLoginType, UserSigninType } from 'src/interfaces/user.interface';
 import { LibService } from 'src/lib/lib.service';
-import { User } from 'src/schemas/user.model';
+import { User, UserDocument } from 'src/schemas/user.model';
 
 @Injectable()
 export class UserService {
     constructor(
-        @InjectModel(User.name) private UserModel: Model<User>,
+        @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
         private lib: LibService,
         private jwt: JwtService,
         private config: ConfigService

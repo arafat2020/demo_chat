@@ -8,14 +8,14 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 export class UserController {
     constructor(private userService: UserService) {}
     
-    @Post('/signup')
+    @Post('signup')
     public async signup(@Body() credential: UserDto){
         return this.userService.signup({
             user: credential
         });
     }
 
-    @Post('/signin')
+    @Post('signin')
     public async signin(@Body() credential: UserSigninDto) {
          return this.userService.signin({
              user: credential

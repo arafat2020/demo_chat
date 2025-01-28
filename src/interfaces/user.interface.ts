@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { z } from "zod";
 
 export const UserSignUpSchema = z.object({
@@ -22,7 +23,7 @@ export const BaseHeaderSchema = z.object({
 
 export const ExtendedHeaderSchema = BaseHeaderSchema.extend({
   user: z.object({
-    id: z.string(),
+    id: z.instanceof(mongoose.Schema.Types.ObjectId),
     iat: z.string(),
     exp: z.string(),
   }).optional(),
