@@ -14,7 +14,7 @@ export class Room{
         required: true,
         default: false
     })
-    isGroups: boolean
+    isGroup: boolean
 
     @Prop()
     name: string

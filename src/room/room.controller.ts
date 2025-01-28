@@ -13,3 +13,4 @@ export class RoomController {
         return this.roomService.createRoomOneToOne({ room: credential})
     }
 }
+
