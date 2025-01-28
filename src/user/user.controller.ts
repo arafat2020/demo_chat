@@ -1,6 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { UserDto, UserSigninDto } from './user.dto';
+import { Body, Controller, Get, Headers, Post, Request, UseGuards } from '@nestjs/common';
+import { ExtendedHeaderDto, UserDto, UserSigninDto } from './user.dto';
 import { UserService } from './user.service';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('user')
 export class UserController {
@@ -18,5 +20,12 @@ export class UserController {
          return this.userService.signin({
              user: credential
          })
+    }
+
+    @Get('/me')
+    @UseGuards(AuthGuard)
+    @ApiBearerAuth()
+    public async me(@Request() req:ExtendedHeaderDto) {
+        return 
     }
 }

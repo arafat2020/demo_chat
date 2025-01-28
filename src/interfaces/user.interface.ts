@@ -11,10 +11,23 @@ export const UserSignUpSchema = z.object({
 });
 
 export const UserSigninSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8),
+  email: z.string().email(),
+  password: z.string().min(8),
 });
 
+export const BaseHeaderSchema = z.object({
+  authorization: z.string().min(1, 'Authorization header is required'),
+  'x-custom-header': z.string().optional(),
+});
 
+export const ExtendedHeaderSchema = BaseHeaderSchema.extend({
+  user: z.object({
+    id: z.string(),
+    iat: z.string(),
+    exp: z.string(),
+  }).optional(),
+});
+
+export type UserFormHeaderSchema = z.infer<typeof ExtendedHeaderSchema>
 export type UserLoginType = z.infer<typeof UserSignUpSchema>;
 export type UserSigninType = z.infer<typeof UserSigninSchema>;

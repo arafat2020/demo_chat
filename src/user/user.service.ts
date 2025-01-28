@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserLoginType, UserSigninType } from 'src/interfaces/user.interface';
+import { UserFormHeaderSchema, UserLoginType, UserSigninType } from 'src/interfaces/user.interface';
 import { LibService } from 'src/lib/lib.service';
 import { User } from 'src/schemas/user.model';
 
@@ -70,6 +70,23 @@ export class UserService {
                 secret: this.config.get('JWT_SECRET'),
                 expiresIn: '24h'
             })
+        }
+    }
+
+    public async getMe({ header }: {
+        header: UserFormHeaderSchema
+    }): Promise<Partial<User>> {
+        const user = await this.UserModel.findOne({
+            _id: header.user?.id
+        })
+
+        if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+        return {
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            active: user.active,
+            pic: user.pic
         }
     }
 

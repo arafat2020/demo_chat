@@ -10,6 +10,7 @@ async function bootstrap() {
     .setDescription('A light weight chat service to interact with people')
     .setVersion('1.0')
     .addTag('cats')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);
