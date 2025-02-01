@@ -19,9 +19,4 @@ export class RoomDto extends createZodDto(RoomSchemaOneToOne) {
     })
     userTwoId: mongoose.Schema.Types.ObjectId;
   
-    @ApiProperty({
-      example: 'Hello, how are you?',
-      description: 'The last message sent in the room (optional)',
-    })
-    lastMessage?: string;
   }

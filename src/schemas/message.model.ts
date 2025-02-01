@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Room } from "./room.model";
 import mongoose, { HydratedDocument } from "mongoose";
+import { User } from "./user.model";
 
 @Schema()
 export class Message {
@@ -30,6 +31,9 @@ export class Message {
         default: false
     })
     isDeleted: boolean
+
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+    user: User
 
 }
 

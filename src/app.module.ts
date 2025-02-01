@@ -9,6 +9,7 @@ import { LibModule } from './lib/lib.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RoomModule } from './room/room.module';
 import { MessageModule } from './message/message.module';
+import { UploadModule } from './upload/upload.module';
 
 
 @Module({
@@ -30,6 +31,7 @@ import { MessageModule } from './message/message.module';
     LibModule,
     RoomModule,
     MessageModule,
+    UploadModule,
   ],
   exports: [],
   controllers: [AppController],
