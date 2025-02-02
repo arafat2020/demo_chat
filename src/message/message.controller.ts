@@ -33,4 +33,5 @@ export class MessageController {
     public async updateMessageById(@Body() payload: UpdateMessageDto){
         return this.messageService.updateMessageById(payload)
     }
+    
 }

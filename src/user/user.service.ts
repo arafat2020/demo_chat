@@ -6,19 +6,24 @@ import { Model } from 'mongoose';
 import { UserFormHeaderSchema, UserLoginType, UserSigninType } from 'src/interfaces/user.interface';
 import { LibService } from 'src/lib/lib.service';
 import { User, UserDocument } from 'src/schemas/user.model';
+import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
-        private lib: LibService,
-        private jwt: JwtService,
-        private config: ConfigService
+        private readonly lib: LibService,
+        private readonly jwt: JwtService,
+        private readonly config: ConfigService,
+        private readonly uploadService: UploadService 
     ) { }
 
     public async signup({
         user
-    }: { user: UserLoginType }): Promise<{
+    }: { 
+        user: UserLoginType,
+        uploadFile: Express.Multer.File
+     }): Promise<{
         user: Partial<User>
         token: string
     }> {

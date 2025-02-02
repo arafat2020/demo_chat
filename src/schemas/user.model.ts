@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import mongoose, { HydratedDocument } from "mongoose";
+import { FileDoc } from "./file.model";
 
 @Schema()
 export class User {
@@ -10,9 +11,9 @@ export class User {
     name: string;
 
     @Prop({
-            required: true,
-            unique: true,
-        })
+        required: true,
+        unique: true,
+    })
     username: string;
 
     @Prop()
@@ -38,6 +39,11 @@ export class User {
         default: false,
     })
     active: boolean;
+
+    @Prop({
+        type: mongoose.Schema.Types.ObjectId, ref: 'File'
+    })
+    files: FileDoc
 
 }
 
