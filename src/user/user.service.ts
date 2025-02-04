@@ -28,8 +28,8 @@ export class UserService {
         user: Partial<User>
         token: string
     }> {
-        console.log(user.password);
-
+        if (await this.UserModel.findOne({ email: user.email })) throw new HttpException('Email already taken', HttpStatus.CONFLICT)
+        if (await this.UserModel.findOne({ username: user.username })) throw new HttpException('Username already taken', HttpStatus.CONFLICT)
         user.password = await this.lib.hashPassword({ password: user.password });
         const fileInstance = await this.uploadService.uploadFile(uploadFile)
         const created = await this.UserModel.create({

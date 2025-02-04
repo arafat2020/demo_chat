@@ -2,17 +2,20 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Room } from "./room.model";
 import mongoose, { HydratedDocument } from "mongoose";
 import { User } from "./user.model";
+import { FileDoc } from "./file.model";
 
 @Schema()
 export class Message {
-    
+
     @Prop({
         required: true,
     })
     content: string;
 
-    @Prop()
-    file: string;
+    @Prop({
+        type: mongoose.Schema.Types.ObjectId, ref: 'FileDoc'
+    })
+    file: FileDoc
 
     @Prop({
         default: Date.now()
@@ -32,7 +35,7 @@ export class Message {
     })
     isDeleted: boolean
 
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     user: User
 
 }

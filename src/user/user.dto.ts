@@ -15,8 +15,12 @@ export class UserDto extends createZodDto(UserSignUpSchema) {
     @ApiProperty({ example: 'password123', description: 'The user\'s password (min 8 characters)' })
     password: string;
 
-    @ApiProperty({ example: 'https://example.com/user-pic.jpg', description: 'URL of the user\'s profile picture' })
-    pic: string;
+    @ApiProperty({ 
+        type: 'string', 
+        format: 'binary', 
+        description: 'Profile picture file upload' 
+      })
+      file: Express.Multer.File;  
 
     @ApiProperty({ example: '2025-01-01T00:00:00Z', description: 'The user\'s joining date' })
     joiningDate: Date;
