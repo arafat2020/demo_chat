@@ -1,9 +1,11 @@
-import { Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, ParseFilePipe, Post, Query, UploadedFile, UseGuards } from '@nestjs/common';
+import { Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, ParseFilePipe, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { MessageService } from './message.service';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
 import { MessageDto } from 'src/interfaces/message.interface';
-import { DeleteMessageDto, GetMessageDto, UpdateMessageDto } from './message.dto';
+import { CreateMessageDto, DeleteMessageDto, GetMessageDto, UpdateMessageDto } from './message.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('message')
 @UseGuards(AuthGuard)
@@ -12,24 +14,35 @@ export class MessageController {
 
     @Post('create')
     @ApiBearerAuth()
+    @ApiConsumes('multipart/form-data') // 🚀 Important for Swagger/OpenAPI
+    @UseInterceptors(FileInterceptor('file'))
     public async createMessage(
-        @Body() message: MessageDto,
+        @Body() message: CreateMessageDto,
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
-                    new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }), // 5MB limit
+                    new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }), // 5MB limit
                 ],
                 fileIsRequired: false
             })) file: Express.Multer.File,
     ) {
-        return this.messageService.createMessage({ message })
+        return this.messageService.createMessage({
+            message,
+            file
+        })
     }
-    
+
 
     @Get('getMessage')
     @ApiBearerAuth()
-    public async getMessagesByRoomId(@Query('roomId') roomId: GetMessageDto) {
-        return this.messageService.getMessagesByRoomId(roomId)
+    public async getMessagesByRoomId(
+        @Query() room: GetMessageDto,
+        @Query() pagination: PaginationDto
+    ) {
+        return this.messageService.getMessagesByRoomId({
+            pagination,
+            room
+        })
     }
 
     @Post('delete')

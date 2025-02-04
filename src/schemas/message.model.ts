@@ -7,9 +7,7 @@ import { FileDoc } from "./file.model";
 @Schema()
 export class Message {
 
-    @Prop({
-        required: true,
-    })
+    @Prop()
     content: string;
 
     @Prop({

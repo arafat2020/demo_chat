@@ -3,8 +3,7 @@ import { Types } from "mongoose";
 
 // Zod schema for Message
 export const MessageSchemaZod = z.object({
-    content: z.string().min(1, "Content is required"), // Ensures content is not empty
-    file: z.string().optional(), // Optional file path
+    content: z.string().min(1, "Content is required").optional(), // Ensures content is not empty
     created: z.preprocess((val) => new Date(val as string), z.date()).default(new Date()), // Defaults to current date
     updated: z.preprocess((val) => new Date(val as string), z.date()).default(new Date()), // Defaults to current date
     room: z.instanceof(Types.ObjectId).or(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid Room ID")), // Ensures valid ObjectId
