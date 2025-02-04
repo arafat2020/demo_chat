@@ -15,27 +15,39 @@ export class UserService {
         private readonly lib: LibService,
         private readonly jwt: JwtService,
         private readonly config: ConfigService,
-        private readonly uploadService: UploadService 
+        private readonly uploadService: UploadService
     ) { }
 
     public async signup({
-        user
-    }: { 
+        user,
+        uploadFile
+    }: {
         user: UserLoginType,
         uploadFile: Express.Multer.File
-     }): Promise<{
+    }): Promise<{
         user: Partial<User>
         token: string
     }> {
+        console.log(user.password);
+
         user.password = await this.lib.hashPassword({ password: user.password });
-        const created = await this.UserModel.create(user);
+        const fileInstance = await this.uploadService.uploadFile(uploadFile)
+        const created = await this.UserModel.create({
+            name: user.name,
+            username: user.username,
+            password: user.password,
+            email: user.email,
+            active: true,
+            file: fileInstance.id
+        });
         const createdUser = await created.save();
         return {
             user: {
                 name: createdUser.name,
                 username: createdUser.username,
                 email: createdUser.email,
-                active: createdUser.active
+                active: createdUser.active,
+                file: fileInstance
             },
             token: await this.jwt.signAsync({ id: createdUser._id }, {
                 secret: this.config.get('JWT_SECRET'),
@@ -54,7 +66,7 @@ export class UserService {
     }> {
         const isExist = await this.UserModel.findOne({
             email: user.email
-        })
+        }).populate("file")
         if (!isExist) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
 
 
@@ -63,15 +75,16 @@ export class UserService {
             password: user.password
         })
 
-        if (!isMatch) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED)
+        if (!isMatch) throw new HttpException('Wrong Password', HttpStatus.UNAUTHORIZED)
         return {
             user: {
                 name: isExist.name,
                 username: isExist.username,
                 email: isExist.email,
-                active: isExist.active
+                active: isExist.active,
+                file: isExist.file
             },
-            token: await this.jwt.signAsync({ id: isExist._id }, {
+            token: await this.jwt.signAsync({ id: isExist.id }, {
                 secret: this.config.get('JWT_SECRET'),
                 expiresIn: '24h'
             })
@@ -81,9 +94,9 @@ export class UserService {
     public async getMe({ header }: {
         header: UserFormHeaderSchema
     }): Promise<Partial<User>> {
-        const user = await this.UserModel.findOne({
-            _id: header.user?.id
-        })
+        console.log(header.user);
+        
+        const user = await this.UserModel.findById(header.user?.id).populate("file")
 
         if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
         return {
@@ -91,7 +104,7 @@ export class UserService {
             username: user.username,
             email: user.email,
             active: user.active,
-            pic: user.pic
+            file: user.file
         }
     }
 

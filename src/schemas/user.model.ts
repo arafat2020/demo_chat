@@ -26,11 +26,6 @@ export class User {
     email: string;
 
     @Prop({
-        required: true,
-    })
-    pic: string;
-
-    @Prop({
         default: Date.now(),
     })
     joiningDate: Date;
@@ -41,9 +36,9 @@ export class User {
     active: boolean;
 
     @Prop({
-        type: mongoose.Schema.Types.ObjectId, ref: 'File'
+        type: mongoose.Schema.Types.ObjectId, ref: 'FileDoc'
     })
-    files: FileDoc
+    file: FileDoc
 
 }
 

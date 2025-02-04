@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { MongooseExceptionFilter } from './filters/mongoose-exception.filter';
+import { CommonFilter } from './filters/global.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +16,7 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);
-  app.useGlobalFilters(new MongooseExceptionFilter())
+  app.useGlobalFilters(new MongooseExceptionFilter(), new CommonFilter())
   app.enableCors();
   await app.listen(process.env.PORT ?? 3000);
 }

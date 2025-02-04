@@ -14,7 +14,7 @@ export class FileDoc {
         required: true,
         unique: true,
     })
-    fileName: string;
+    fileId: string;
 
     @Prop({
         required: true,

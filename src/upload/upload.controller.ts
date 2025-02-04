@@ -17,7 +17,7 @@ export class UploadController {
             ]
         })
     ) file:Express.Multer.File) {
-        return this.uploadService.uploadFile(file, file.originalname)
+        return this.uploadService.uploadFile(file)
     }
 
 }

@@ -26,18 +26,23 @@ export class UploadService {
     }
 
 
-    async uploadFile(file: Express.Multer.File, fileName: string): Promise<string> {
+    async uploadFile(file: Express.Multer.File): Promise<FileDocument> {
         const bucketName = this.config.getOrThrow<string>('AWS_BUCKET_NAME');
+        const fileId  = uuid4().toString()
         await this.s3Client.send(new PutObjectCommand({
             Bucket: bucketName,
-            Key: `${uuid4()}/${fileName}}`,
+            Key: fileId,
             Body: file.buffer,
             ContentType: file.mimetype,
             ACL: 'public-read', // Optional: makes the file publicly 
         }));
 
         // Construct the public URL
-        return this.getPresignedUrl(fileName, 3600 * 24 * 6)
+        return this.FileModel.create({
+            fileUrl: await this.getPresignedUrl(fileId),
+            fileId,
+            bucket: bucketName,
+        })
     }
 
     private async getPresignedUrl(fileName: string, expiresIn: number = 3600): Promise<string> {

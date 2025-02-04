@@ -6,7 +6,6 @@ export const UserSignUpSchema = z.object({
   username: z.string(),
   email: z.string().email(),
   password: z.string().min(8),
-  pic: z.string().url(),
   joiningDate: z.date(),
   active: z.boolean(),
 });

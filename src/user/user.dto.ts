@@ -3,7 +3,7 @@ import { createZodDto } from "nestjs-zod";
 import { BaseHeaderSchema, ExtendedHeaderSchema, UserSigninSchema, UserSignUpSchema } from "src/interfaces/user.interface";
 
 export class UserDto extends createZodDto(UserSignUpSchema) {
-    @ApiProperty({ example: 'John Doe', description: 'The user\'s full name' })
+    @ApiProperty({ example: 'John Doe', description: 'The user\'s full name', })
     name: string;
 
     @ApiProperty({ example: 'john_doe', description: 'The user\'s username' })
