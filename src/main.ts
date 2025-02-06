@@ -6,7 +6,7 @@ import { CommonFilter } from './filters/global.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // app.setGlobalPrefix('api')  
+  app.setGlobalPrefix('api')  
   const config = new DocumentBuilder()
     .setTitle('Turbo chat service')
     .setDescription('A light weight chat service to interact with people')

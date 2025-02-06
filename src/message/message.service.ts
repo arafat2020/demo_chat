@@ -61,7 +61,7 @@ export class MessageService {
         await this.isRoomExist(room.roomId as unknown as string)
         return await this.MessageModel.find({
             room: room.roomId
-        })
+        }).populate("file")
             .skip(pagination.skip ?? 0)
             .limit(pagination.take ?? 10)
             .sort({

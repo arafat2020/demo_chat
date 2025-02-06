@@ -39,7 +39,7 @@ export class UploadService {
 
         // Construct the public URL
         return this.FileModel.create({
-            fileUrl: await this.getPresignedUrl(fileId),
+            fileUrl: await this.getPresignedUrl(fileId, 3600 * 24 * 7),
             fileId,
             bucket: bucketName,
         })
